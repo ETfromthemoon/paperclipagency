@@ -1,0 +1,58 @@
+# Despliegue de Paperclip con Docker para gestionar crececonia y Strimo.cl.
+#
+# Paperclip NO publica una imagen oficial: la imagen se construye desde el repo.
+# Por eso este compose construye desde una copia local del código de Paperclip.
+#
+# Pasos:
+#   1) git clone https://github.com/paperclipai/paperclip.git   (junto a este repo, en ./paperclip)
+#   2) cp .env.example .env   y rellena BETTER_AUTH_SECRET, ANTHROPIC_API_KEY, etc.
+#   3) docker compose up -d --build
+#   4) Abre http://localhost:3100  y luego importa las empresas (ver README).
+#
+# Usa el PostgreSQL EMBEBIDO (persistido en el bind mount ./data). Para Postgres
+# externo gestionado, descomenta el servicio `db` y pon DATABASE_URL en tu .env.
+
+services:
+  paperclip:
+    build:
+      # Ruta a tu checkout del código de Paperclip. Sobrescribe con PAPERCLIP_SRC.
+      context: ${PAPERCLIP_SRC:-./paperclip}
+      dockerfile: Dockerfile
+      args:
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    image: paperclip-local
+    container_name: paperclip
+    restart: unless-stopped
+    ports:
+      - "${PAPERCLIP_PORT:-3100}:3100"
+    environment:
+      HOST: "0.0.0.0"
+      PAPERCLIP_HOME: "/paperclip"
+      PAPERCLIP_DEPLOYMENT_MODE: "authenticated"
+      PAPERCLIP_DEPLOYMENT_EXPOSURE: "private"
+      PAPERCLIP_PUBLIC_URL: "${PAPERCLIP_PUBLIC_URL:-http://localhost:3100}"
+      BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET:?Define BETTER_AUTH_SECRET en tu .env}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      # Para Postgres externo, descomenta y usa el servicio db de abajo:
+      # DATABASE_URL: "${DATABASE_URL:-}"
+    volumes:
+      # Persiste BD embebida, assets subidos, clave de secretos y workspaces.
+      - "${PAPERCLIP_DATA_DIR:-./data/docker-paperclip}:/paperclip"
+    # depends_on:
+    #   - db
+
+  # ── Opcional: PostgreSQL gestionado por ti (producción) ──────────────────
+  # db:
+  #   image: docker.io/library/postgres:17-alpine
+  #   container_name: paperclip-db
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: paperclip
+  #     POSTGRES_PASSWORD: paperclip
+  #     POSTGRES_DB: paperclip
+  #   volumes:
+  #     - ./data/postgres:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
