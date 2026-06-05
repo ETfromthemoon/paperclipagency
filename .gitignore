@@ -1,0 +1,19 @@
+# Secretos y entorno — NUNCA commitear claves reales
+.env
+.env.*
+!.env.example
+*.local
+
+# Dependencias y artefactos
+node_modules/
+dist/
+build/
+.cache/
+
+# Datos locales de Paperclip (PGlite embebido, exports, etc.)
+data/
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
