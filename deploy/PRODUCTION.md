@@ -3,6 +3,20 @@
 Guía para dejar Paperclip funcionando de forma estable (no solo en tu portátil) y conectar
 los servicios de **crececonia** y **Strimo.cl**.
 
+## 0. Atajo: arranque automático en un VPS
+
+En un VPS Ubuntu limpio (22.04/24.04), dentro de este repo, todo se instala con un comando:
+
+```sh
+chmod +x scripts/setup-vps.sh
+sudo ./scripts/setup-vps.sh
+```
+
+El script instala Docker, clona Paperclip, crea `.env` con un `BETTER_AUTH_SECRET` aleatorio y
+levanta el servicio en el puerto 3100. Después edita `.env` para poner tu `ANTHROPIC_API_KEY` y
+reinicia con `docker compose restart paperclip`. El resto de esta guía explica cada paso en
+detalle y las opciones de acceso seguro.
+
 ## 1. Dónde alojarlo
 
 Paperclip es un servidor Node.js + Postgres. Opciones, de más simple a más control:

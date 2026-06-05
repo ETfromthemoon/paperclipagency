@@ -1,18 +1,21 @@
-# Extensión Paperclip (sidecar) para crececonia.
-# Define adaptador, presupuestos (en centavos USD), env y rutinas (cron).
-# Los presupuestos frenan automáticamente al agente al alcanzarse.
+# Extensión Paperclip (sidecar) para crececonia — ARRANQUE MÍNIMO.
+# Solo el CEO. Sin rutinas (cron) por prudencia. Presupuestos en centavos USD.
+# El freno por presupuesto auto-pausa al agente al 100%.
 schema: paperclip/v1
 
-# Presupuesto mensual de toda la empresa: USD 300 (= 30000 centavos). Ajústalo.
-budgetMonthlyCents: 30000
+# Presupuesto mensual de la empresa: USD 150 (= 15000 centavos). Ajústalo cuando haya resultados.
+budgetMonthlyCents: 15000
 
 agents:
   ceo:
     adapter:
       type: claude_local
+      # 'cwd' (directorio de trabajo) y 'model' se configuran en el despliegue/UI,
+      # NO se versionan aquí (son específicos de la máquina). Ver deploy/PRODUCTION.md.
       # config:
-      #   model: <tu-modelo-claude-preferido>   # opcional; por defecto usa el del CLI `claude`
-    budgetMonthlyCents: 8000
+      #   model: <tu-modelo-claude-preferido>
+      #   maxTurnsPerRun: 60   # bájalo para limitar gasto por heartbeat
+    budgetMonthlyCents: 12000
     inputs:
       env:
         ANTHROPIC_API_KEY:
@@ -20,72 +23,5 @@ agents:
           requirement: optional
           default: ""
 
-  estratega-contenido:
-    adapter:
-      type: claude_local
-    budgetMonthlyCents: 8000
-    inputs:
-      env:
-        ANTHROPIC_API_KEY:
-          kind: secret
-          requirement: optional
-          default: ""
-
-  redactor:
-    adapter:
-      type: claude_local
-    budgetMonthlyCents: 7000
-    inputs:
-      env:
-        ANTHROPIC_API_KEY:
-          kind: secret
-          requirement: optional
-          default: ""
-
-  disenador-visual:
-    adapter:
-      type: claude_local
-    budgetMonthlyCents: 4000
-    inputs:
-      env:
-        ANTHROPIC_API_KEY:
-          kind: secret
-          requirement: optional
-          default: ""
-        CANVA_API_TOKEN:
-          kind: secret
-          requirement: optional
-          default: ""
-
-  community-email:
-    adapter:
-      type: claude_local
-    budgetMonthlyCents: 3000
-    inputs:
-      env:
-        ANTHROPIC_API_KEY:
-          kind: secret
-          requirement: optional
-          default: ""
-        GOOGLE_REFRESH_TOKEN:
-          kind: secret
-          requirement: optional
-          default: ""
-
-# Rutinas: cada clave es el slug de la tarea recurrente correspondiente en tasks/.
-routines:
-  calendario-editorial:
-    triggers:
-      - kind: schedule
-        cronExpression: "0 9 * * 1"      # Lunes 09:00
-        timezone: America/Santiago
-  borradores-diarios:
-    triggers:
-      - kind: schedule
-        cronExpression: "0 8 * * 1-5"    # L–V 08:00
-        timezone: America/Santiago
-  informe-metricas:
-    triggers:
-      - kind: schedule
-        cronExpression: "0 18 * * 5"     # Viernes 18:00
-        timezone: America/Santiago
+# Sin 'routines': los heartbeats programados se activan más tarde desde la UI,
+# cuando confíes en el agente. Para probar, usa "Invoke" (heartbeat manual).

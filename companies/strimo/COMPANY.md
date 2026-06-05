@@ -1,36 +1,33 @@
 ---
 name: Strimo.cl
-description: Empresa de desarrollo de sitios web. Diseño y construcción de webs para negocios.
+description: Empresa de desarrollo de sitios web para negocios.
 slug: strimo
 schema: agentcompanies/v1
-version: 0.1.0
+version: 1.0.0
 license: MIT
 goals:
-  - Automatizar el flujo de captación de clientes (prospección, cualificación, propuesta y seguimiento).
+  - Captar clientes nuevos de desarrollo web de forma predecible (prospección, cualificación, propuesta y seguimiento).
 requirements:
   secrets:
     - ANTHROPIC_API_KEY
-    - GOOGLE_REFRESH_TOKEN
-    - VERCEL_TOKEN
 ---
 
 # Strimo.cl
 
 **Strimo.cl** desarrolla **sitios web** para negocios. Esta empresa de agentes existe para
-**automatizar la captación de clientes** de extremo a extremo.
+**captar clientes nuevos de forma predecible**.
 
 ## Misión
-Construir una máquina de captación predecible: que entren leads cualificados de forma constante
-y lleguen a una propuesta, con el mínimo trabajo manual.
+Construir una máquina de captación: que entren leads cualificados de forma constante y lleguen a
+una propuesta, con el mínimo trabajo manual y con control humano antes de contactar a clientes reales.
 
 ## Objetivo
-**Automatizar el flujo de captación**: prospección → cualificación → propuesta → seguimiento,
-con puntos de control humano antes de contactar a clientes reales.
+**Captar clientes**: embudo prospección → cualificación → propuesta → seguimiento → cierre.
 
-## Embudo (pipeline)
-```
-Prospección  →  Cualificación  →  Propuesta  →  Seguimiento  →  Cierre
-   (SDR)          (researcher)     (propuestas)   (correo)       (humano)
-```
+## Cómo arranca esta empresa
+Empieza con **un solo agente, el CEO** (director comercial). El CEO define el cliente ideal y la
+estrategia (que tú apruebas) y **contrata al equipo comercial bajo demanda** (primero un SDR de
+prospección) cuando el trabajo lo exija.
 
-Ver `BLUEPRINT.md` para el mapa completo objetivos → agentes → rutinas.
+> Arranque mínimo y prudente: sin rutinas automáticas (cron) hasta confiar en el equipo, y con
+> aprobación humana obligatoria antes de enviar cualquier correo o propuesta a clientes reales.
